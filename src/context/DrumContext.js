@@ -1,17 +1,20 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 const DrumContext = createContext();
 
 export const DrumProvider = ({ children }) => {
+  const audioRef = useRef();
   //const [, setQuote] = useState();
   const [bankState, setBankState] = useState(true);
   const [powerState, setPowerState] = useState(true);
   const [display, setDisplay] = useState("");
+  const [clip, setClip] = useState();
 
-  const [keybtn, setKeyBtn] = useState('');
+  const [keybtn, setKeyBtn] = useState("Q");
   const [textShow] = useState();
-  const [textHide,setTextHide] = useState('textHide');
-   const [dispayClass,setDispayClass] = useState('textHide');
-  const [volume, setVolume] = useState(50);
+  const [textHide, setTextHide] = useState("textHide");
+  const [dispayClass, setDispayClass] = useState("textHide");
+  const [volume, setVolume] = useState(0.5);
+  const [playing, setPlaying] = useState(false);
   const [bankOne] = useState([
     {
       keyCode: 81,
@@ -125,70 +128,79 @@ export const DrumProvider = ({ children }) => {
     },
   ]);
 
-  const currentBank = bankState ? bankOne : bankTwo
+  const currentBank = bankState ? bankOne : bankTwo;
   //const empt=display.replace(/\s/g,' ')
 
-   //dispayClass=powerState ? 'textShow' : textHide
+  //dispayClass=powerState ? 'textShow' : textHide
 
-  const text=powerState ? display:'empt'
+  const text = powerState ? display : "empt";
 
   useEffect(() => {
-    setDisplay('test')
-    setDispayClass('textHide')
+    setDisplay("test");
+    setDispayClass("textHide");
+    //triggerBtn()
   }, []);
 
   const handleBank = () => {
     setBankState(!bankState);
   };
   const handlePower = () => {
-      
-    if(text==!'empt'){
-      setDispayClass('textShow')
-    }
-    else{
-        setDispayClass('textHide')
+    if (text == !"empt") {
+      setDispayClass("textShow");
+    } else {
+      setDispayClass("textHide");
     }
     setPowerState((prevState) => !prevState);
-     //setDispayClass(powerState ? 'textShow' : 'textHide')
+    //setDispayClass(powerState ? 'textShow' : 'textHide')
     //setPowerState(!powerState);
-    
   };
   const handleVolume = (e) => {
     //setDispayClass(powerState ? 'textShow' : 'textHide')
     setVolume(e.target.value);
-   if(powerState){
-     setDisplay(`volume: ${volume}`);
-    setDispayClass('textShow')
-   }
-   else{
-      setVolume(volume)
-    setDispayClass('textHide')
-    
-   }
-    
-   
-    
+    if (powerState) {
+      setDisplay(`volume: ${Math.round(volume * 100)}`);
+      setDispayClass("textShow");
+    } else {
+      setVolume(volume);
+      setDispayClass("textHide");
+    }
   };
   const handleDisplay = () => {
-     setDispayClass('textHide')
+    setDispayClass("textHide");
   };
   const triggerBtn = (e) => {
     const key = e.target.value;
-    setDispayClass(powerState ? 'textShow' : 'textHide')
-    if(powerState){
-      const Drum =currentBank.filter((item) => item.keyTrigger==key).map(item=>item.id);
-     console.log(Drum)
-     setDisplay(Drum)
-  } 
-  else{
-    //setDisplay('  ')
-  }
 
+    setKeyBtn(key);
+    console.log(" the button is : " + keybtn);
+
+    setDispayClass(powerState ? "textShow" : "textHide");
+    if (powerState) {
+      const Drum = currentBank
+        .filter((item) => item.keyTrigger == key)
+        .map((item) => item.id);
+      const src = currentBank
+        .filter((item) => item.keyTrigger == key)
+        .map((item) => item.url);
+      //console.log(src)
+      setDisplay(Drum);
+      setClip(src);
+
+      
+      const audio = document.getElementById(keybtn);
+
+      setTimeout(() => {
+        audio.play();
+        audio.volume = volume;
+        console.log("the audio is volume " +volume);
+        
+      }, 100);
+    } else {
+      //setDisplay('  ')
     }
-    //setKeyBtn(previousState => e.target.value)
-    //console.log(key)
-  
-  
+  };
+  //setKeyBtn(previousState => e.target.value)
+  //console.log(key)
 
   return (
     <DrumContext.Provider
@@ -202,6 +214,8 @@ export const DrumProvider = ({ children }) => {
         dispayClass,
         textShow,
         textHide,
+        clip,
+        playing,
         handleBank,
         handlePower,
         handleVolume,
@@ -213,7 +227,5 @@ export const DrumProvider = ({ children }) => {
       {children}
     </DrumContext.Provider>
   );
-
-  
 };
 export default DrumContext;

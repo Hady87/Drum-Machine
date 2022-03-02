@@ -1,8 +1,11 @@
-import { useContext, useState } from "react";
-import Button from "./Button";
+import React, { useContext, useState, useRef } from "react";
+//import React, { useRef } from 'react';
+
+import Audio from "./Audio";
 import DrumContext from "../context/DrumContext";
 function MainCompoment() {
   //const [bankState, setBankState] = useState(true);
+  const audioRef = useRef()
   const {
     bankState,
     powerState,
@@ -12,34 +15,88 @@ function MainCompoment() {
     text,
     textShow,
     textHide,
+    clip,
     dispayClass,
     handleBank,
     handlePower,
     handleVolume,
     handleDisplay,
     triggerBtn,
-    
   } = useContext(DrumContext);
+
+ 
   return (
     <>
       <div className="container w-50">
         <div className="row justify-content-sm-center text-nowrap mt-4">
           <div className="col col-sm-6">
             <div>
-              <input type='button' className='btn btn-secondary' value='Q' onClick={triggerBtn} />
-    
-             <input type='button' className='btn btn-secondary' value='W' onClick={triggerBtn} />
-             <input type='button' className='btn btn-secondary' value='E' onClick={triggerBtn} />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="Q"
+                onClick={triggerBtn}
+              />
+
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="W"
+                onClick={triggerBtn}
+              />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="E"
+                onClick={triggerBtn}
+              />
             </div>
             <div>
-             <input type='button' className='btn btn-secondary' value='A' onClick={triggerBtn} />
-             <input type='button' className='btn btn-secondary' value='S' onClick={triggerBtn}/>
-             <input type='button' className='btn btn-secondary' value='D' onClick={triggerBtn} />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="A"
+                onClick={triggerBtn}
+              />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="S"
+                onClick={triggerBtn}
+              />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="D"
+                onClick={triggerBtn}
+              />
             </div>
             <div>
-             <input type='button' className='btn btn-secondary' value='Z' onClick={triggerBtn} />
-            <input type='button' className='btn btn-secondary' value='X' onClick={triggerBtn} />
-             <input type='button' className='btn btn-secondary' value='C' onClick={triggerBtn}/>
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="Z"
+                onClick={triggerBtn}
+              />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="X"
+                onClick={triggerBtn}
+              />
+              <input
+                type="button"
+                className="btn btn-secondary"
+                value="C"
+                onClick={triggerBtn}
+              />
+                <audio id={keybtn} src={clip} ></audio>      
+                      
+
+            <audio>
+			<source src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3" type="audio/mpeg" >
+			</source>
+		</audio>
             </div>
           </div>
 
@@ -56,17 +113,15 @@ function MainCompoment() {
                 onChange={handlePower}
               />
             </div>
-            <p className={dispayClass}>
-             {` ${text}`}  
-            </p>
+            <p className={dispayClass}>{` ${text}`}</p>
             <div>
               <input
                 type="range"
                 className="form-range mt-2"
                 min="0"
-                max="100"
-                step="1"
-                value={volume}
+                max="1"
+                step="0.01"
+                defaultValue={volume}
                 onChange={handleVolume}
                 onMouseLeave={handleDisplay}
               ></input>
