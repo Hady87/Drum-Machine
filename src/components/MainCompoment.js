@@ -1,20 +1,12 @@
-import React, { useContext, useState, useRef } from "react";
-//import React, { useRef } from 'react';
-
-import Audio from "./Audio";
+import React, { useContext } from "react";
 import DrumContext from "../context/DrumContext";
 function MainCompoment() {
-  //const [bankState, setBankState] = useState(true);
-  const audioRef = useRef()
   const {
     bankState,
     powerState,
     volume,
-    display,
     keybtn,
     text,
-    textShow,
-    textHide,
     clip,
     dispayClass,
     handleBank,
@@ -24,7 +16,6 @@ function MainCompoment() {
     triggerBtn,
   } = useContext(DrumContext);
 
- 
   return (
     <>
       <div className="container w-50">
@@ -90,13 +81,14 @@ function MainCompoment() {
                 value="C"
                 onClick={triggerBtn}
               />
-                <audio id={keybtn} src={clip} ></audio>      
-                      
+              <audio id={keybtn} src={clip}></audio>
 
-            <audio>
-			<source src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3" type="audio/mpeg" >
-			</source>
-		</audio>
+              <audio>
+                <source
+                  src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3"
+                  type="audio/mpeg"
+                ></source>
+              </audio>
             </div>
           </div>
 
